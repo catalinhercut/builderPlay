@@ -6,25 +6,52 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "test:jest": "jest src",
+    "test:cypress": "cypress open",
+    "test:e2e": "start-server-and-test dev http://localhost:3000 test:cypress",
+    "test:performance": "jmeter -n -t ./performance_tests/test_plan.jmx -l ./reports/jmeter_results.jtl",
+    "test:accessibility": "lighthouse http://localhost:3000 --output json --output-path ./reports/lighthouse_report.json",
+    "storybook": "start-storybook -p 6006 -c .storybook -s public",
+    "build-storybook": "build-storybook -o .storybook_out -c .storybook -s public",
+    "ci:build": "npm run build && npm run test:jest && npm run test:e2e && npm run test:performance && npm run test:accessibility",
+    "ci:deploy": "deploy-script --env $DEPLOY_ENV"
   },
   "dependencies": {
     "@builder.io/dev-tools": "^0.1.24",
     "@builder.io/react": "^3.0.14",
     "@builder.io/sdk": "^2.0.8",
+    "encoding": "^0.1.13",
     "next": "13.5.5",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/react": "^7.5.2",
     "@types/node": "^20.8.6",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "cypress": "^13.4.0",
     "eslint": "^8",
     "eslint-config-next": "13.5.5",
+    "jest": "^27.0.6",
+    "lighthouse": "^11.3.0",
     "postcss": "^8",
+    "start-server-and-test": "^1.13.1",
     "tailwindcss": "^3",
     "typescript": "^5.2.2"
+  },
+  "jest": {
+    "preset": "next/jest",
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "testMatch": [
+      "**/src/**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
   }
 }
